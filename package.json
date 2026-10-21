@@ -1,0 +1,32 @@
+{
+  "name": "gochina-portal",
+  "version": "0.1.0",
+  "description": "GoChina Digital Portal & Serverless Crypto Subscription Platform",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "wrangler deploy --dry-run",
+    "seed": "tsx scripts/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:visual": "tsx scripts/run-visual-e2e.ts"
+  },
+  "dependencies": {
+    "cloudflare-worker-kvdb": "file:../cloudlflare-worker-kvdb",
+    "hono": "^4.7.2",
+    "jose": "^5.9.6",
+    "viem": "^2.57.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250224.0",
+    "@types/node": "^22.13.5",
+    "puppeteer-core": "^25.14.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7",
+    "wrangler": "^4.31.0"
+  }
+}

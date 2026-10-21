@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gochina-portal",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-11-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gochina-db",
+      "database_id": "gochina-db-id"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "CACHE_KV",
+      "id": "gochina-cache-kv-id"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "development",
+    "PAY3_BASE_URL": "http://127.0.0.1:8080",
+    "PAY3_JWT_SECRET": "dev_secret_pay3_key_for_testing_1234567890",
+    "PORTAL_JWT_SECRET": "dev_secret_portal_key_for_testing_1234567890"
+  },
+  "triggers": {
+    "crons": [
+      "*/5 * * * *"
+    ]
+  }
+}

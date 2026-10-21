@@ -1,0 +1,4 @@
+# Local Development Environment Secrets (Do NOT commit .dev.vars to git)
+# Copy this file to .dev.vars for local wrangler dev
+PAY3_JWT_SECRET="dev_secret_pay3_key_for_testing_1234567890"
+PORTAL_JWT_SECRET="dev_secret_portal_key_for_testing_1234567890"
