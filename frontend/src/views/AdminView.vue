@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import {
   api,
   type OrderRecord,
@@ -69,11 +69,36 @@ function getCategoryName(catId?: string): string {
 // Orders state
 const orders = ref<OrderRecord[]>([]);
 const nextCursor = ref<string | undefined>(undefined);
+let pollTimer: any = null;
 
 onMounted(async () => {
   if (authStore.isAdmin) {
     await reloadData();
     talents.value = await api.getTalents();
+
+    pollTimer = setInterval(async () => {
+      if (activeTab.value === 'inquiries' && authStore.isAdmin) {
+        try {
+          const list = await api.getInquiries();
+          inquiries.value = list;
+          if (selectedInquiry.value) {
+            const updated = list.find((i) => i.id === selectedInquiry.value?.id);
+            if (updated) {
+              selectedInquiry.value = updated;
+            }
+          }
+        } catch {
+          // silent fail in background poll
+        }
+      }
+    }, 4000);
+  }
+});
+
+onUnmounted(() => {
+  if (pollTimer) {
+    clearInterval(pollTimer);
+    pollTimer = null;
   }
 });
 

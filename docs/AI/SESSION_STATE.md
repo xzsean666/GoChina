@@ -58,6 +58,15 @@
 - **[`frontend/src/types/categories.ts`](file:///ssd0/git/GoChina/frontend/src/types/categories.ts)**：
   - 前端标准类别配置中心，规范中英文名称、特征点、典型任务与参考计费区间。
 
+### 4. 站内专属 1v1 纯客服聊天定位收敛 (Simplest 1v1 In-App Support Chat)
+- **零外部第三方依赖 (No Telegram/Third-Party Dependence)**：
+  - 明确系统定位：目前没有 Telegram 客服，全部依靠平台自研的站内纯粹 1v1 聊天系统完成客户咨询、需求细节沟通与整单。
+  - 清理 `InquiryModal.vue` 中冗余的 Telegram / WhatsApp / WeChat 渠道选择器及外部 Telegram 客服超链接，默认且固定为 `in_app`。
+  - 清理 `HomeView.vue` 4步流程中文案“在站内聊天或 Telegram”，明确为“在站内专属 1v1 聊天系统中直接与客服对接”。
+- **1v1 聊天闭环体验增强 (Seamless 1v1 Realtime Experience)**：
+  - `TalentsView.vue` 提交用人需求弹窗后，即刻无缝路由进入该工单对应的 1v1 聊天窗口（`/chat?id=...`）。
+  - `FloatingChatBubble.vue`（全局悬浮气泡）与 `AdminView.vue`（客服工作台）加入 4 秒静默自动轮询机制，确保客户与客服双向即时收到最新 1v1 消息流。
+
 ---
 
 ## 3. Verification Commands & Results

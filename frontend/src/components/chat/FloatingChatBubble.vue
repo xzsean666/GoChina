@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue';
 import { api, type InquiryItem } from '@/api/client';
 import { useAuthStore } from '@/stores/auth';
 import {
@@ -18,25 +18,50 @@ const activeInquiry = ref<InquiryItem | null>(null);
 const inputText = ref('');
 const isSending = ref(false);
 const messagesBox = ref<HTMLElement | null>(null);
+let pollTimer: any = null;
 
 async function toggleChat() {
   isOpen.value = !isOpen.value;
-  if (isOpen.value && authStore.isAuthenticated) {
-    loadLatestInquiry();
+  if (isOpen.value) {
+    if (authStore.isAuthenticated) {
+      loadLatestInquiry();
+      if (!pollTimer) {
+        pollTimer = setInterval(() => {
+          if (isOpen.value && authStore.isAuthenticated) {
+            loadLatestInquiry(true);
+          }
+        }, 4000);
+      }
+    }
+  } else {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
   }
 }
 
-async function loadLatestInquiry() {
+async function loadLatestInquiry(silent = false) {
   try {
     const list = await api.getInquiries();
     if (list.length > 0) {
+      const prevMsgCount = activeInquiry.value?.messages?.length || 0;
       activeInquiry.value = list[0];
-      scrollToBottom();
+      if (!silent || (list[0].messages?.length || 0) > prevMsgCount) {
+        scrollToBottom();
+      }
     }
   } catch (err) {
     console.error('Failed to load inquiry for bubble', err);
   }
 }
+
+onUnmounted(() => {
+  if (pollTimer) {
+    clearInterval(pollTimer);
+    pollTimer = null;
+  }
+});
 
 async function sendMessage() {
   if (!inputText.value.trim() || isSending.value) return;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { api, type TalentItem } from '@/api/client';
 import { useAuthStore } from '@/stores/auth';
 import InquiryModal from '@/components/inquiry/InquiryModal.vue';
@@ -28,6 +29,7 @@ import {
   Info
 } from 'lucide-vue-next';
 
+const router = useRouter();
 const authStore = useAuthStore();
 
 const talents = ref<TalentItem[]>([]);
@@ -105,7 +107,7 @@ function openInquiryForTalent(talent: TalentItem) {
 }
 
 function handleInquirySuccess(inquiryId: string) {
-  // Can redirect or show notification
+  router.push({ path: '/chat', query: { id: inquiryId } });
 }
 
 onMounted(() => {

@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { api, type TalentItem } from '@/api/client';
 import { useAuthStore } from '@/stores/auth';
 import { TALENT_CATEGORIES } from '@/types/categories';
-import { X, Send, Sparkles, MessageSquare, CheckCircle, ExternalLink, HelpCircle } from 'lucide-vue-next';
+import { X, Send, Sparkles, MessageSquare, CheckCircle, ExternalLink, HelpCircle, ShieldCheck } from 'lucide-vue-next';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -24,7 +24,7 @@ const title = ref('');
 const message = ref('');
 const budget = ref('');
 const expectedDuration = ref('');
-const preferredChannel = ref<'in_app' | 'telegram' | 'whatsapp' | 'wechat'>('in_app');
+const preferredChannel = ref<'in_app'>('in_app');
 const contactInfo = ref('');
 const isSubmitting = ref(false);
 const errorMsg = ref('');
@@ -241,39 +241,15 @@ function resetForm() {
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
-            首选客服沟通渠道 (Preferred Support Channel)
-          </label>
-          <div class="grid grid-cols-4 gap-2">
-            <button
-              v-for="ch in [
-                { id: 'in_app', label: '站内工单聊天' },
-                { id: 'telegram', label: 'Telegram' },
-                { id: 'whatsapp', label: 'WhatsApp' },
-                { id: 'wechat', label: '微信 WeChat' }
-              ]"
-              :key="ch.id"
-              type="button"
-              class="py-2 px-1 rounded-xl text-xs font-semibold border text-center transition-all truncate"
-              :class="preferredChannel === ch.id ? 'bg-brand-500 text-white border-brand-500 shadow-sm' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'"
-              @click="preferredChannel = ch.id as any"
-            >
-              {{ ch.label }}
-            </button>
+        <!-- Built-in 1v1 Chat System Notice -->
+        <div class="p-3.5 bg-brand-500/10 border border-brand-500/20 rounded-2xl flex items-start gap-3">
+          <div class="w-8 h-8 rounded-xl bg-brand-500/20 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0 mt-0.5">
+            <MessageSquare class="w-4 h-4" />
           </div>
-        </div>
-
-        <div v-if="preferredChannel !== 'in_app'">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
-            您的 {{ preferredChannel.toUpperCase() }} 账号或手机号
-          </label>
-          <input
-            v-model="contactInfo"
-            type="text"
-            :placeholder="`例如：@username 或 +86 13800000000`"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none"
-          />
+          <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            <div class="font-bold text-brand-600 dark:text-brand-400 mb-0.5">站内专属 1v1 即时在线客服：</div>
+            平台采用站内独立 1v1 聊天系统，提交后将自动为您开启专属对话室，客服专员实时在线对接细节并为您整好定制订单。
+          </div>
         </div>
 
         <div v-if="errorMsg" class="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs rounded-xl">
@@ -286,14 +262,10 @@ function resetForm() {
         </div>
 
         <div class="pt-2 flex items-center justify-between">
-          <a
-            href="https://t.me/GoChinaSupport"
-            target="_blank"
-            class="text-xs text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
-          >
-            <span>直接联系 Telegram 客服</span>
-            <ExternalLink class="w-3.5 h-3.5" />
-          </a>
+          <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <ShieldCheck class="w-4 h-4 text-emerald-500" />
+            <span>站内专属 1v1 隐私加密沟通</span>
+          </div>
 
           <button
             type="submit"
@@ -302,7 +274,7 @@ function resetForm() {
           >
             <Send v-if="!isSubmitting" class="w-4 h-4" />
             <span v-else class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-            <span>{{ isSubmitting ? '提交中...' : '提交客服整好订单' }}</span>
+            <span>{{ isSubmitting ? '提交中...' : '提交并开启 1v1 沟通' }}</span>
           </button>
         </div>
       </form>

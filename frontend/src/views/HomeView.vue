@@ -276,9 +276,9 @@ onMounted(() => {
             <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold text-lg mb-4">
               02
             </div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">与客服沟通细节</h3>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">与客服 1v1 沟通细节</h3>
             <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              在站内聊天或 Telegram 与客服对接具体城市、用车要求、技术栈或教学目标与时间。
+              在站内专属 1v1 聊天系统中直接与客服对接具体城市、用车要求、技术栈或教学目标与时间。
             </p>
           </div>
 
