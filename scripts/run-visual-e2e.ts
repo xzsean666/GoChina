@@ -94,7 +94,7 @@ async function main() {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input, init) => {
     const url = typeof input === 'string' ? input : input instanceof Request ? input.url : input.toString();
-    if (url.startsWith('http://127.0.0.1:8080') || url.startsWith('http://pay3.internal')) {
+    if (url.startsWith('http://127.0.0.1:8080') || url.startsWith('http://pay3.internal') || url.includes('002788.xyz')) {
       return await mockFetch(input, init);
     }
     return await originalFetch(input, init);
@@ -197,7 +197,7 @@ async function main() {
     return await mockAccount.signMessage({ message: msg });
   });
 
-  // Inject mock Web3 wallet provider with valid ECDSA signatures
+  // Inject mock Web3 wallet provider with valid ECDSA signatures and Amoy balances
   await page.evaluateOnNewDocument(`
     (function() {
       window.__name = function(fn) { return fn; };
@@ -209,12 +209,31 @@ async function main() {
           if (method === 'eth_requestAccounts' || method === 'eth_accounts') {
             return Promise.resolve([mockAddress]);
           }
+          if (method === 'eth_chainId') {
+            return Promise.resolve('0x13882'); // 80002 Amoy
+          }
+          if (method === 'wallet_switchEthereumChain' || method === 'wallet_addEthereumChain') {
+            return Promise.resolve(null);
+          }
+          if (method === 'wallet_watchAsset') {
+            return Promise.resolve(true);
+          }
+          if (method === 'eth_getBalance') {
+            return Promise.resolve('0xde0b6b3a7640000'); // 1 POL
+          }
+          if (method === 'eth_call') {
+            return Promise.resolve('0x000000000000000000000000000000000000000000000000000000003b9aca00'); // 1000 Tokens
+          }
+          if (method === 'eth_sendTransaction') {
+            return Promise.resolve('0x9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b');
+          }
           if (method === 'personal_sign') {
             var msg = args.params ? (args.params[0].startsWith('0x') ? args.params[1] : args.params[0]) : '';
             return window.mockSignMessage(msg);
           }
           return Promise.resolve(null);
-        }
+        },
+        on: function() {}
       };
     })();
   `);
@@ -454,7 +473,15 @@ async function main() {
     await new Promise((r) => setTimeout(r, 800));
     await takeScreenshot('13-user-dashboard-overview.png', 'Client Dashboard - Active Missions, Contract Tracking & Web3 Profile');
 
-    console.log('🎉 All 13 comprehensive E2E visual scenarios captured and verified successfully!');
+    // -------------------------------------------------------------
+    // SCENARIO 14: Dev Faucet Page (Testing Water Tap & Gas Station)
+    // -------------------------------------------------------------
+    await page.goto(`http://127.0.0.1:${PORT}/faucet`, { waitUntil: 'networkidle0' });
+    await page.waitForSelector('h1');
+    await new Promise((r) => setTimeout(r, 800));
+    await takeScreenshot('14-dev-faucet-gas-station.png', 'Dev Faucet - Realtime Amoy Balances, Zero-Gas Relayer Claim & Direct Contract Minting');
+
+    console.log('🎉 All 14 comprehensive E2E visual scenarios captured and verified successfully!');
   } finally {
     await browser.close();
     server.close();
