@@ -12,7 +12,7 @@ export class Pay3Client {
 
   constructor(private config: Pay3ClientConfig) {
     this.baseUrl = config.baseUrl.replace(/\/+$/, '');
-    this.fetchFn = config.fetchFn ?? globalThis.fetch;
+    this.fetchFn = (config.fetchFn ?? globalThis.fetch).bind(globalThis);
   }
 
   private async request<T>(

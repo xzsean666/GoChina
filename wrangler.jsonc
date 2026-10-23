@@ -10,20 +10,22 @@
     {
       "binding": "DB",
       "database_name": "gochina-db",
-      "database_id": "gochina-db-id"
+      "database_id": "dc514e55-5bbb-4673-ad18-249f62885703"
     }
   ],
   "kv_namespaces": [
     {
       "binding": "CACHE_KV",
-      "id": "gochina-cache-kv-id"
+      "id": "ba553f4867b0457899c782d529e19209"
     }
   ],
   "vars": {
     "ENVIRONMENT": "development",
-    "PAY3_BASE_URL": "http://127.0.0.1:8080",
-    "PAY3_JWT_SECRET": "dev_secret_pay3_key_for_testing_1234567890",
-    "PORTAL_JWT_SECRET": "dev_secret_portal_key_for_testing_1234567890"
+    "PAY3_BASE_URL": "https://home-10030.002788.xyz",
+    "PAY3_JWT_SECRET": "dev-dry-run-jwt-secret-000000000000666",
+    "PAY3_JWT_KEY_ID": "pay3-dev-key-1",
+    "PORTAL_JWT_SECRET": "dev_secret_portal_key_for_testing_1234567890",
+    "FAUCET_PRIVATE_KEY": "0xa010561d0ee36587adb4c9d81f4d19d84dc8b2246a9b7b8fd0665d1f8b15d844"
   },
   "triggers": {
     "crons": [

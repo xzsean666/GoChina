@@ -34,7 +34,7 @@ export class OrderService {
         order: { id: orderId, ...existingOrder },
         payment: {
           chainId: existingOrder.chainId,
-          tokenAddress: '0x3813e82e6f7098b9583FC0F33a9821830A26ad81',
+          tokenAddress: existingOrder.tokenAddress || '0xc252a473dc466de3799149a2616ccc625832f40c',
           tokenSymbol: existingOrder.tokenSymbol,
           tokenDecimals: 6,
           amount: existingOrder.amount,
@@ -65,6 +65,7 @@ export class OrderService {
       planId,
       amount: plan.tokenAmount,
       tokenSymbol: pay3Res.payment.token_symbol,
+      tokenAddress: pay3Res.payment.token_address,
       chainId: pay3Res.payment.chain_id,
       receiveAddress: pay3Res.payment.receive_address,
       status: 'pending',

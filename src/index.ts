@@ -7,7 +7,9 @@ export interface Env {
   ENVIRONMENT: string;
   PAY3_BASE_URL: string;
   PAY3_JWT_SECRET: string;
+  PAY3_JWT_KEY_ID?: string;
   PORTAL_JWT_SECRET: string;
+  FAUCET_PRIVATE_KEY?: string;
 }
 
 export default {

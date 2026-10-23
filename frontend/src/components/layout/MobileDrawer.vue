@@ -11,6 +11,7 @@ import {
   Shield,
   LogOut,
   Sparkles,
+  Droplets,
 } from 'lucide-vue-next';
 
 defineProps<{
@@ -80,6 +81,14 @@ function handleLogout() {
 
         <!-- Navigation Links -->
         <div class="py-6 space-y-2">
+          <router-link
+            to="/faucet"
+            class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 transition-colors"
+            @click="handleClose"
+          >
+            <Droplets class="w-4 h-4 mr-2 text-amber-500 animate-pulse" />
+            {{ t('nav.faucet') }}
+          </router-link>
           <router-link
             to="/talents"
             class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-semibold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-colors"

@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "typecheck": "vue-tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "NODE_OPTIONS=\"--no-experimental-webstorage\" vitest run",
+    "test:watch": "NODE_OPTIONS=\"--no-experimental-webstorage\" vitest"
   },
   "dependencies": {
     "lucide-vue-next": "^0.475.0",

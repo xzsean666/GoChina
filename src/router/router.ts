@@ -18,6 +18,8 @@ import { createAdminController } from '../controllers/admin.controller.js';
 import { createTalentController } from '../controllers/talent.controller.js';
 import { createInquiryController } from '../controllers/inquiry.controller.js';
 import { createContractController } from '../controllers/contract.controller.js';
+import { createFaucetController } from '../controllers/faucet.controller.js';
+import { seedDatabase } from '../db/seed.js';
 import type { AuthEnv } from '../middleware/auth.middleware.js';
 import type { Env } from '../index.js';
 
@@ -86,6 +88,16 @@ export function createApp(env: Env, ctx?: ExecutionContext) {
     })
   );
 
+  app.post('/api/setup/seed', async (c) => {
+    try {
+      await db.init();
+      await seedDatabase(db);
+      return c.json({ status: 'ok', message: 'Database schema initialized & seed data populated' });
+    } catch (err: any) {
+      return c.json({ error: err?.message || String(err) }, 500);
+    }
+  });
+
   // Mount API Controllers
   app.route('/api/auth', createAuthController(authService, entitlementService));
   app.route('/api/user', createAuthController(authService, entitlementService));
@@ -95,6 +107,7 @@ export function createApp(env: Env, ctx?: ExecutionContext) {
   app.route('/api/talents', createTalentController(talentService, authService));
   app.route('/api/inquiries', createInquiryController(inquiryService, authService));
   app.route('/api/contracts', createContractController(contractService, verificationService, authService));
+  app.route('/api/faucet', createFaucetController(env));
   app.route('/api/admin', createAdminController(authService, planService, db));
 
   // Global Error Handling

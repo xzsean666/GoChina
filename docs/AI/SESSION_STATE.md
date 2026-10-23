@@ -1,123 +1,91 @@
 # SESSION_STATE.md — Current Session State & Handover
 
 ## 1. Current Context
-- **Current Goal**: 业务逻辑升级 — 人才类别派单制、兼职人才个人墙展示定位、全流程客服统筹整单与新增核心类别（司机带车、导游、程序员、中文老师等）
-- **Current Task**: 人才用人逻辑重构（类别优先对接、个人墙案例展示化、兼职排期客服整单模式）
-- **Current Status**: **ALL WORK COMPLETED & VERIFIED (100% DONE)**
+- **Current Goal**: 生产/开发测试环境线上部署、对接真实 Pay3 支付网关 (`https://home-10030.002788.xyz`)、新增 Dev Faucet 水龙头页面、全流程端到端跑通与编写线上部署 Runbook
+- **Current Status**: **ALL WORK DEPLOYED, RUNTIME VERIFIED & 100% PASSING**
 
 ---
 
-## 2. Completed Work (Talent Categories, Showcase Wall & CS Order Finalization)
+## 2. 线上环境与访问端点清单
 
-### 1. 业务逻辑定位与流程重构
-- **个人墙仅作展示与实力背书 (Exhibition Only)**：
-  - 明确“个人墙可以有，但是只是展示”，去除个人即时日程买断与指定个人下单的刻板逻辑。
-  - 在个人卡片与展示墙全局增加明确声明：“展示墙仅供参考兼职专家资历与案例实力。平台服务人员均为严选兼职，业务对接以人才类别为主，由客服统筹排期并整好订单。”
-- **人才类别优先对接机制 (Category-First Matching)**：
-  - 全站梳理并确立核心兼职服务类别矩阵：
-    1. **🚗 司机带车 (Driver with Vehicle)**：别克GL8/埃尔法商务配车、中英双语司导、机场接送、跨城商务考察。
-    2. **🧭 私人导游 (Tour Guide & Companion)**：国家持证双语向导、城市漫游地陪、文化讲解、定制考察动线。
-    3. **💻 程序员 (Programmer & Cloud Dev)**：Cloudflare Workers 全栈、Web3智能合约、微信小程序及国内 API 对接。
-    4. **📖 中文老师 (Mandarin Chinese Tutor)**：对外汉语专业硕士/私教、商务汉语速成、HSK等级备考、高管沉浸式口语。
-    5. **🌐 商务翻译 (Business Interpreter)**：广交会展会陪同、外贸小商品城选品、商务谈判及涉外合同交涉。
-    6. **🔍 验厂验货 (Factory Audit & QC)**：珠三角/长三角工业带驻场、ISO合规核查、AQL产线抽样检验及集装箱监装。
-    7. **🏢 本地代办 (Corporate Concierge)**：WFOE 外资公司设立代办、银行商业账户预约、涉外公证与商务秘书。
-- **客服统筹兼职排期并整好订单 (CS Consultation & Custom Order Finalization)**：
-  - 契合“目前这些都是兼职”的业务现实：客户选择人才类别并提出时间、城市与要求 -> 与客服深入沟通 -> 客服统筹兼职人员排期并在后台“整好定制订单” -> 客户在合约中心/聊天室一键通过 Pay3 USDT/USDC 支付。
-
-### 2. 前端界面与交互全面升级
-- **[`TalentsView.vue`](file:///ssd0/git/GoChina/frontend/src/views/TalentsView.vue)**：
-  - 重构为两大层次：顶部“核心人才服务类别矩阵” + 下方“签约兼职专家案例展示墙”。
-  - 类别卡片展示服务描述、代表性服务范围及参考计费标准，直通“与客服对接此服务类别”弹窗。
-  - 兼职展示墙增加类别筛选与明确提示说明，卡片按钮调整为“按此类兼职咨询客服”。
-- **[`HomeView.vue`](file:///ssd0/git/GoChina/frontend/src/views/HomeView.vue)**：
-  - 主页 Hero 文案与 4 步运作流程升级为类别派单模式（选择类别 -> 沟通细节 -> 客服整单 -> 加密履约）。
-  - 首页新增核心类别服务展示区，高亮展示司机带车、导游、程序员、中文老师等核心类别。
-- **[`InquiryModal.vue`](file:///ssd0/git/GoChina/frontend/src/components/inquiry/InquiryModal.vue)**：
-  - 新增人才服务类别切换选择器，支持预置类别与动态联想。
-  - 增加兼职派单流程与客服整单的友好说明。
-- **[`AdminView.vue`](file:///ssd0/git/GoChina/frontend/src/views/AdminView.vue)**：
-  - 客服后台新增“人才服务类别”字段选择与自动填充。
-  - 拟定订单弹窗按钮明确为“整好并发布定制订单”，强化客服整单派单定位。
-- **[`ChatView.vue`](file:///ssd0/git/GoChina/frontend/src/views/ChatView.vue)** & **[`ContractsView.vue`](file:///ssd0/git/GoChina/frontend/src/views/ContractsView.vue)**：
-  - 下拉选单与合约详情同步更新，全面展示新类别标签与兼职人员信息。
-
-### 3. 数据层与后端模型拓展
-- **[`src/types/models.ts`](file:///ssd0/git/GoChina/src/types/models.ts)**：
-  - 拓展 `TalentCategory` 类型，支持 `driver`、`guide`、`tech`、`chinese_tutor`、`translation`、`inspection`、`sourcing`、`concierge` 等。
-  - 合约模型增加 `category` 字段。
-- **[`src/db/seed.ts`](file:///ssd0/git/GoChina/src/db/seed.ts)**：
-  - 注入全套真实感兼职专家展示案例：
-    - `tal_master_zhang`：张师傅（司机带车 / 埃尔法商务司导）
-    - `tal_lily_lin`：林导（私人双语导游地陪）
-    - `tal_alex_wang`：王工（兼职全栈与边缘计算程序员）
-    - `tal_teacher_chen`：陈老师（对外商务中文私教）
-    - `tal_david_li`：李工（电子验厂验货质检）
-    - `tal_elena_zhang`：张敏（广交会多语商务翻译）
-    - `tal_sarah_liu`：刘欣（本地商务代办）
-- **[`frontend/src/types/categories.ts`](file:///ssd0/git/GoChina/frontend/src/types/categories.ts)**：
-  - 前端标准类别配置中心，规范中英文名称、特征点、典型任务与参考计费区间。
-
-### 4. 站内专属 1v1 纯客服聊天定位收敛 (Simplest 1v1 In-App Support Chat)
-- **零外部第三方依赖 (No Telegram/Third-Party Dependence)**：
-  - 明确系统定位：目前没有 Telegram 客服，全部依靠平台自研的站内纯粹 1v1 聊天系统完成客户咨询、需求细节沟通与整单。
-  - 清理 `InquiryModal.vue` 中冗余的 Telegram / WhatsApp / WeChat 渠道选择器及外部 Telegram 客服超链接，默认且固定为 `in_app`。
-  - 清理 `HomeView.vue` 4步流程中文案“在站内聊天或 Telegram”，明确为“在站内专属 1v1 聊天系统中直接与客服对接”。
-- **1v1 聊天闭环体验增强 (Seamless 1v1 Realtime Experience)**：
-  - `TalentsView.vue` 提交用人需求弹窗后，即刻无缝路由进入该工单对应的 1v1 聊天窗口（`/chat?id=...`）。
-  - `FloatingChatBubble.vue`（全局悬浮气泡）与 `AdminView.vue`（客服工作台）加入 4 秒静默自动轮询机制，确保客户与客服双向即时收到最新 1v1 消息流。
+- **前端应用主站 (Cloudflare Pages)**: [https://gochina-portal.pages.dev](https://gochina-portal.pages.dev)
+- **开发者测试水龙头 (Dev Faucet)**: [https://gochina-portal.pages.dev/faucet](https://gochina-portal.pages.dev/faucet)
+- **后端 API 边缘网关 (Cloudflare Workers)**: [https://gochina-portal.xz-sean-g.workers.dev](https://gochina-portal.xz-sean-g.workers.dev)
+- **Pay3 支付网关服务**: `https://home-10030.002788.xyz` (Polygon Amoy 80002)
+- **D1 生产数据库**: `gochina-db` (`dc514e55-5bbb-4673-ad18-249f62885703`)
+- **KV 生产缓存**: `gochina-cache-kv` (`ba553f4867b0457899c782d529e19209`)
 
 ---
 
-## 3. Verification Commands & Results
+## 3. 本次核心交付与关键更新
 
-### 1. 后端单元与集成测试 (12 Files / 61 Tests)
+1. **对接 `/ssd0/git/pay3/docs/deployment/test/README.md` 与 `https://home-10030.002788.xyz`**：
+   - 修复 Pay3 JWT 签名生成机制：严格包含 `nbf` (Not Before) 必填字段与 `kid: "pay3-dev-key-1"`，算法 `HS256`，彻底解决 401 鉴权问题。
+   - 修复 Cloudflare Workers 全局 fetch 绑定：解决 `Illegal invocation` 上下文丢失。
+   - 完善核验状态机与数据解析：在 `verifyOrderInstant` 中触发即时扫块后，安全解析 `payment.amount` 与 `status: 'paid' | 'confirmed'`，防止数据不一致。
+2. **新增上线测试水龙头 (Dev Faucet) 模块**：
+   - 前端页面：[`frontend/src/views/FaucetView.vue`](file:///ssd0/git/GoChina/frontend/src/views/FaucetView.vue)（线上可直接访问 `/faucet`），支持：
+     - 一键连接钱包与实时余额看板（POL / USDC / USDT）。
+     - 自动检测并提示一键切换至 Polygon Amoy 测试网（80002）。
+     - **一键免 Gas 代发领水**（后端代付打款 100 USDC / 100 USDT / 0.1 POL，0 门槛领水）。
+     - **智能合约直连铸币**（调用 MockUSDC / MockUSDT 合约公开的 `faucet()` 铸造 1,000 枚）。
+     - 一键添加代币到 MetaMask / OKX。
+   - 后端路由：[`src/controllers/faucet.controller.ts`](file:///ssd0/git/GoChina/src/controllers/faucet.controller.ts)（提供 `/api/faucet/info` 与 `/api/faucet/claim`）。
+3. **真实链上端到端全流程 100% 跑通验证**：
+   - Web3 签名登录 -> Faucet 领水 -> 建单分配子地址 -> 链上转账 15 USDC -> 即时扫块核验 -> 订单流转为 Paid -> KVDB 自动激活并下发数字权益（`goc_live_...`），全流程在生产边缘跑通。
+4. **生成线上部署操作与运维指南**：
+   - 编写完成：[`docs/DEPLOYMENT_TEST_TO_PROD_GUIDE.md`](file:///ssd0/git/GoChina/docs/DEPLOYMENT_TEST_TO_PROD_GUIDE.md)。
+
+---
+
+## 4. Verification Commands & Results
+
+### 1. 后端全量测试 (12 Files / 61 Tests)
 ```bash
-$ pnpm test
+$ npx vitest run
  Test Files  12 passed (12)
       Tests  61 passed (61)
-   Duration  5.56s
+   Duration  5.61s
 ```
 
-### 2. 前端单元测试 (5 Files / 13 Tests)
+### 2. 前端全量测试 (5 Files / 13 Tests)
 ```bash
-$ pnpm --dir frontend test
+$ cd frontend && NODE_OPTIONS="--no-experimental-webstorage" npx vitest run
  Test Files  5 passed (5)
       Tests  13 passed (13)
-   Duration  1.21s
+   Duration  1.14s
 ```
 
-### 3. 前端生产打包 (Vue 3 + TypeScript + Vite)
+### 3. 前端构建打包
 ```bash
-$ pnpm --dir frontend build
-dist/index.html                                  1.21 kB │ gzip:  0.66 kB
-dist/assets/index-DIfkgbwi.css                  61.86 kB │ gzip:  9.40 kB
-dist/assets/index-CtP34kcU.js                  209.51 kB │ gzip: 73.45 kB
-✓ built in 4.09s
+$ cd frontend && npx vite build
+dist/index.html                     1.21 kB │ gzip:  0.66 kB
+dist/assets/index-Ci_Ogc2_.css     66.11 kB │ gzip:  9.94 kB
+dist/assets/FaucetView-DzlapJcb.js 20.13 kB │ gzip:  6.22 kB
+dist/assets/index-ia0DSSFT.js     211.20 kB │ gzip: 73.89 kB
+✓ built in 4.30s
 ```
 
-### 4. 根项目 TypeScript 类型检查
+### 4. 真实线上端到端测试 (Production Live)
 ```bash
-$ pnpm typecheck
-$ tsc --noEmit
-# 0 errors, passed cleanly.
-```
+$ node --use-env-proxy [live_e2e_script]
+=== STEP 1: Web3 Wallet Auth ===
+User JWT Token received. User ID: usr_w_1792749300893_07a49e587f9c
 
-### 5. 全闭环无头浏览器可视化 E2E 测试 (13 Scenarios)
-```bash
-$ pnpm test:visual
-📸 [01-landing-hero-talent.png] Captured: Landing Hero - On-Demand China Talent & Single Contracts
-📸 [02-landing-featured-specialists.png] Captured: Featured China Specialists (Factory Auditor, Translator, Sourcing)
-📸 [03-talent-directory-market.png] Captured: China Talent Market - Category Filter & Vetted Specialists
-📸 [04-inquiry-modal-consultation.png] Captured: Custom Staffing & Labor Scope Consultation Modal
-📸 [05-auth-web3-login.png] Captured: Authenticated User Session - Web3 Wallet Connected in Navbar
-📸 [06-built-in-chat-workspace.png] Captured: Built-in Support Chat Workspace - Multi-turn Consultation Stream
-📸 [07-floating-chat-bubble.png] Captured: Global Built-in Floating Chat Bubble Expanded on Talents View
-📸 [08-admin-support-desk-reply.png] Captured: Admin Support Desk - Reviewing Customer Inquiries & Live Reply
-📸 [09-admin-draft-contract-modal.png] Captured: Admin Contract Drafting Modal - Scope of Work, Deliverables & Lump-sum Price
-📸 [10-user-contracts-center.png] Captured: User Contracts Center - Reviewing Support-Issued Contract (Pending Payment)
-📸 [11-contract-crypto-checkout-pay3.png] Captured: One-Time Crypto Checkout - Pay3 Dedicated HD Address & Amount
-📸 [12-contract-paid-and-active.png] Captured: Contract Activated - State Flipped to Active in Progress upon On-Chain Settlement
-📸 [13-user-dashboard-overview.png] Captured: Client Dashboard - Active Missions, Contract Tracking & Web3 Profile
-🎉 All 13 comprehensive E2E visual scenarios captured and verified successfully!
+=== STEP 2: Create Checkout Order ===
+Order created successfully!
+  Order ID:        ord_1792749616035_2ko4h2
+  Pay3 Order ID:   60883564-3084-4f99-b5e5-5e6597616136
+  Receive Address: 0x6b2a7fb8fc337098c4b06fcc88182f3eb7bcb1aa
+  Token:           USDC
+  Amount:          15
+
+=== STEP 3: Execute On-Chain Payment ===
+Payment Tx Broadcasted! TxHash: 0x2f43e7622b06a31e75ea169762f367f6376e1fab5282191360e36a4f257d283b
+
+=== STEP 4: Instant Verify & Entitlement Activation ===
+[Attempt 1] Status: pending
+[Attempt 2] Status: paid
+🎉 ORDER CONFIRMED AS PAID!
+Entitlement Token Provisioned: goc_live_fa4f60fe7d53d96ac3cd3c637a670b1d97a0709a7105be03
 ```

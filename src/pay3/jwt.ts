@@ -6,14 +6,16 @@ export async function generatePay3Token(
   scopes: string[]
 ): Promise<string> {
   const secretKey = new TextEncoder().encode(config.jwtSecret);
+  const now = Math.floor(Date.now() / 1000);
   return await new SignJWT({
     scope: scopes.join(' '),
   })
-    .setProtectedHeader({ alg: 'HS256', kid: config.jwtKeyId || 'pay3-key-1' })
-    .setIssuedAt()
+    .setProtectedHeader({ alg: 'HS256', kid: config.jwtKeyId || 'pay3-dev-key-1' })
+    .setIssuedAt(now - 60)
+    .setNotBefore(now - 60)
     .setSubject(config.jwtSubject || 'gochina-portal')
     .setIssuer(config.jwtIssuer || 'pay3')
     .setAudience(config.jwtAudience || 'pay3-api')
-    .setExpirationTime('1h')
+    .setExpirationTime(now + 3600)
     .sign(secretKey);
 }

@@ -14,6 +14,7 @@ import {
   Shield,
   ChevronDown,
   Activity,
+  Droplets,
 } from 'lucide-vue-next';
 
 defineProps<{
@@ -101,6 +102,13 @@ function truncateIdentifier(id?: string): string {
 
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
+          <router-link
+            to="/faucet"
+            class="px-3 py-1.5 rounded-xl text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 transition-all duration-150 flex items-center gap-1.5 font-semibold text-xs border border-amber-500/30 mr-1"
+          >
+            <Droplets class="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+            <span>{{ t('nav.faucet') }}</span>
+          </router-link>
           <router-link
             to="/talents"
             class="px-3.5 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-slate-100/70 dark:hover:bg-slate-800/60 transition-all duration-150 flex items-center gap-1.5 font-semibold text-brand-600 dark:text-brand-400"

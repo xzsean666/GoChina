@@ -66,6 +66,7 @@ export interface OrderData {
   amount: string;
   paidAmount?: string;
   tokenSymbol: string;
+  tokenAddress?: string;
   chainId: number;
   receiveAddress: string;
   status: OrderStatus;

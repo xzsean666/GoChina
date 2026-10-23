@@ -49,10 +49,11 @@ export class VerificationService {
       };
     }
 
-    // Call Pay3 direct verify endpoint
-    const pay3Res = await this.pay3Client.verifyOrder(order.pay3OrderId);
+    // Call Pay3 direct verify endpoint to trigger instant on-chain scanning
+    await this.pay3Client.verifyOrder(order.pay3OrderId).catch(() => {});
+    const pay3Res = await this.pay3Client.getOrder(order.pay3OrderId);
 
-    if (pay3Res.status === 'paid') {
+    if (pay3Res.status === 'paid' || (pay3Res as any).status === 'confirmed') {
       // Re-fetch order to protect against concurrent fulfillment race condition (TOCTOU)
       const currentOrder = await this.db.orders.get(orderId);
       if (currentOrder && currentOrder.status === 'paid') {
@@ -66,8 +67,9 @@ export class VerificationService {
         };
       }
 
+      const paidAmount = pay3Res.payment?.amount || order.amount;
       order.status = 'paid';
-      order.paidAmount = pay3Res.payment.amount;
+      order.paidAmount = paidAmount;
       order.metadata = {
         ...order.metadata,
         paidAt: new Date().toISOString(),

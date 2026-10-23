@@ -7,6 +7,7 @@ const currentLocale = ref<Locale>('zh');
 const messages: Record<Locale, Record<string, string>> = {
   zh: {
     'nav.talents': '人才服务类别',
+    'nav.faucet': '测试水龙头',
     'nav.contracts': '我的合约',
     'nav.inquiries': '客服咨询',
     'nav.plans': '订阅套餐',
@@ -28,6 +29,7 @@ const messages: Record<Locale, Record<string, string>> = {
   },
   en: {
     'nav.talents': 'Talent Categories',
+    'nav.faucet': 'Dev Faucet',
     'nav.contracts': 'My Contracts',
     'nav.inquiries': 'Inquiries',
     'nav.plans': 'Plans & Pricing',
@@ -49,6 +51,7 @@ const messages: Record<Locale, Record<string, string>> = {
   },
   ja: {
     'nav.talents': '人材カテゴリ一覧',
+    'nav.faucet': 'テスト用蛇口',
     'nav.contracts': 'マイ契約',
     'nav.inquiries': 'お問い合わせ',
     'nav.plans': '料金プラン',
